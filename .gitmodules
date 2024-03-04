@@ -1,0 +1,6 @@
+[submodule "trainproject_data_gen"]
+	path = trainproject_data_gen
+	url = https://github.com/emsoft1/trainproject_data_gen.git
+[submodule "train_project_ui"]
+	path = train_project_ui
+	url = https://github.com/emsoft1/train_project_ui.git
