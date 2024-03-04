@@ -4,3 +4,6 @@
 [submodule "train_project_ui"]
 	path = train_project_ui
 	url = https://github.com/emsoft1/train_project_ui.git
+[submodule "train_project_api1"]
+	path = train_project_api1
+	url = https://github.com/emsoft1/train_project_api.git
