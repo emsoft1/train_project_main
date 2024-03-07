@@ -9,6 +9,7 @@ train_flow-deployment.yaml
 *.swp
 build/
 dist/
+data/
 .coverage
 *.iml
 *.egg-info
