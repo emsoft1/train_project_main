@@ -8,6 +8,12 @@ sample_data.set_index('timestamp', inplace=True)
 model = joblib.load("scaler_and_ft_exp2_1024b.mod")
 scaler = joblib.load("scaler.mod")
 
+
+# import data needed to plot average vibrations
+averaged_amplitude_file = "vibration_data.csv"
+df_averaged_amplitude = pd.read_csv(averaged_amplitude_file)
+df_averaged_amplitude.set_index('timestamp',inplace=True)
+
 def get_user_options():
     return user_options
 
@@ -27,6 +33,9 @@ def get_signal_for_plotting(time_stamp):
     test_signal = sample_data.loc[time_stamp,:]
     signal_as_np = test_signal.to_numpy().reshape((1,-1))
     return signal_as_np
+
+def get_vibration_dataframe():
+    return df_averaged_amplitude
 
 # if __name__ == '__main__':
 #     out = []
