@@ -1,11 +1,13 @@
 import joblib
 import pandas as pd
+from keras.models import load_model
 
 THRESHOLD = 0.19
 sample_data = pd.read_csv("ui_data_exp2_1024_buckets.csv")
 user_options = sample_data.timestamp.to_list()
 sample_data.set_index('timestamp', inplace=True)
-model = joblib.load("scaler_and_ft_exp2_1024b.mod")
+#model = joblib.load("scaler_and_ft_exp2_1024b.mod")
+model = load_model("ft_exp2_1024b.h5")
 scaler = joblib.load("scaler.mod")
 
 
@@ -20,10 +22,12 @@ def get_user_options():
 def predict(time_stamp):
     test_signal = sample_data.loc[time_stamp,:]
     signal_as_np = test_signal.to_numpy().reshape((1,-1))
-    prediction = model.predict(signal_as_np)
-    original_signal_scaled = scaler.transform(signal_as_np)
+    scaled_signal = scaler.transform(signal_as_np)
 
-    loss = ((prediction - original_signal_scaled)**2).mean()
+    prediction = model.predict(scaled_signal)
+    #original_signal_scaled = scaler.transform(signal_as_np)
+
+    loss = ((prediction - scaled_signal)**2).mean()
 
     if loss < THRESHOLD:
         return False
