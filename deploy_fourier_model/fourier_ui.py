@@ -8,8 +8,9 @@ import plotly.graph_objects as go
 import numpy as np
 
 
-ANIMATION_STEP = 24
-NORMAL_COLOR = 'lightcyan'
+
+ANIMATION_STEP = 6
+NORMAL_COLOR = 'oldlace'
 WARNING_COLOR = 'lightsalmon'
 FAILPOINT = 550
 
@@ -34,11 +35,6 @@ def create_mean_vibration_animation(failpoint = None):
                           method="animate",
                           args=[None])])]
     ),
-#     frames=[go.Frame(data=[go.Scatter(x=[1, 2], y=[1, 2])]),
-#             go.Frame(data=[go.Scatter(x=[1, 4], y=[1, 4])] ),
-#             go.Frame(data=[go.Scatter(x=[3, 4], y=[3, 4])],
-#                      layout=go.Layout(title_text="End Title"))]
-
 
     frames=[go.Frame( data=[go.Scatter(x=np.arange(len(df.index[:i*ANIMATION_STEP])), y=df.iloc[:i*ANIMATION_STEP,0]),
                             go.Scatter(x=np.arange(len(df.index[:i*ANIMATION_STEP])), y=df.iloc[:i*ANIMATION_STEP,1]),
@@ -52,9 +48,8 @@ def create_mean_vibration_animation(failpoint = None):
 
 
 
-st.title('Anomaly Detection for Predictive Maintenance of Bearings')
+st.title('Anomaly Detection for Bearings Vibrations')
 
-#st.text("Please select a timestamp!")
 
 user_options = get_user_options()
 
@@ -66,8 +61,21 @@ if st.button("Check for anomaly!"):
     if not option:
         st.warning("No timestamp selected!")
     else:
+        #plot if desired
+        if True:
+            signal = get_signal_for_plotting(option)
+            ae_signal = get_signal_for_plotting(option, autoencoded=True)
+            fig, ax = plt.subplots(2,1)
+            fig.set_size_inches((12,5.5))
+            fig.tight_layout(pad=1.5)
+            ax[0].plot(signal)
+            ax[0].set_title('Original Signal', loc='center')
+            ax[1].plot(ae_signal)
+            ax[1].set_title('Autoencoded Signal', loc='center')
+            st.pyplot(fig)
+
         if (predict(option)):
-            st.error('Maintenance needed!')
+            st.error('Anomaly detected! Maintenance recommended!')
         else:
             st.success("Vibrations look normal. Carry on!")
 
@@ -77,7 +85,7 @@ if st.button("Show Signal!"):
     else:
         signal = get_signal_for_plotting(option)
         fig, ax = plt.subplots()
-        ax.plot(signal.transpose())
+        ax.plot(signal)
         st.pyplot(fig)
 
 if st.button("Plot averaged vibrations!"):
@@ -87,24 +95,3 @@ if st.button("Plot averaged vibrations!"):
 if st.button("Monitor vibrations!"):
     fig = create_mean_vibration_animation(failpoint=FAILPOINT)
     st.plotly_chart(fig)
-
-
-
-# signal = get_signal_for_plotting(get_user_options()[0])
-# print(signal, signal.shape)
-# fig, ax = plt.subplots()
-# ax.plot(signal.transpose())
-# fig.savefig("test.png")
-
-
-# option = st.selectbox(
-#    "Select a vibration snapshot to be analyzed!",
-#    user_options,
-#    index=None
-#    #,   placeholder="Select snapshot by timestamp..."
-# )
-
-# st.success('This is a success!')
-# st.info('This is an info')
-# st.warning('This is a semi success')
-# st.error('Let\'s keep positive, this might be pretty close to a success!')
